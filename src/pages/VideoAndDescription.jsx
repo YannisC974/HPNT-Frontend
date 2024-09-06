@@ -1,5 +1,6 @@
 import { Button, Img, TextNoto, Heading } from "../components";
 import React, { useEffect, useState, useRef } from "react";
+import axios from "axios";
 
 const useGetVideoData = () => {
   const [data, setData] = useState(null);
@@ -11,7 +12,7 @@ const useGetVideoData = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('http://127.0.0.1:8000/data/video-section-data-json/'); 
+        const response = await axios.get('https://hpn-ticket.happynation.global/data/video-section-data-json/'); 
         setData(response.data);
         setIsError(false);
       } catch (error) {
