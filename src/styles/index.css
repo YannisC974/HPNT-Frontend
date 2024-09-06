@@ -1,0 +1,150 @@
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Roboto;
+}
+
+input {
+  background-color: transparent;
+  width: 100%;
+}
+
+input:focus {
+  outline: none;
+}
+
+* {
+  box-sizing: border-box;
+  line-height: normal;
+  font-family: inherit;
+  margin: unset;
+}
+
+a {
+  text-decoration: none;
+  display: block;
+}
+
+p {
+  line-height: 1.8;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2; /* Par exemple, pour les titres */
+}
+
+.alice-carousel__dots-item {
+  cursor: pointer;
+}
+
+.white-bg {
+  background-color: #FFF8EE;
+}
+
+.custom-mb-35 {
+  margin-bottom: 35px;
+}
+
+.alice-carousel__dots {
+  margin-top: 10px; 
+}
+
+.alice-carousel__dots-item {
+  width: 12px; 
+  height: 12px; 
+  background-color: #D9D9D9 !important;
+}
+
+.alice-carousel__dots-item.__active {
+  background-color: #F47A2A !important;
+}
+
+.border-gradient {
+  position: relative;
+  background: white;
+  border-radius: 5px; /* Half of the button height for fully rounded corners */
+  z-index: 1;
+}
+
+.border-gradient::before {
+  content: '';
+  position: absolute;
+  top: -0.8px;
+  left: -0.8px;
+  right: -0.8px;
+  bottom: -0.8px;
+  background: linear-gradient(313deg, #f6aa1a, #ee4e36);
+  z-index: -1;
+  border-radius: 4px; /* Slightly larger than the button's border-radius */
+}
+
+.border-gradient::after {
+  content: '';
+  position: absolute;
+  top: 0.8px;
+  left: 0.8px;
+  right: 0.8px;
+  bottom: 0.8px;
+  background: white;
+  border-radius: 2px; /* Slightly smaller than the button's border-radius */
+  z-index: -1;
+}
+
+.border-gradient2 {
+  position: relative;
+  background: #fff8ee;
+  border-radius: 5px; /* Half of the button height for fully rounded corners */
+  z-index: 1;
+}
+
+.border-gradient2::before {
+  content: '';
+  position: absolute;
+  top: -0.7px;
+  left: -0.7px;
+  right: -0.7px;
+  bottom: -0.7px;
+  background: linear-gradient(313deg, #f6aa1a, #ee4e36);
+  z-index: -1;
+  border-radius: 4px; /* Slightly larger than the button's border-radius */
+}
+
+.border-gradient2::after {
+  content: '';
+  position: absolute;
+  top: 0.7px;
+  left: 0.7px;
+  right: 0.7px;
+  bottom: 0.7px;
+  background: #fff8ee;
+  border-radius: 2px; /* Slightly smaller than the button's border-radius */
+  z-index: -1;
+}
+
+.custom-drop-shadow {
+  filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.5));
+}
+
+.yellow_900_red_600_border {
+  border-image: linear-gradient(90deg, #f47a2a, #ea3527)
+}
+
+.custom-input::placeholder {
+  color: black;
+  opacity: 1; /* Assurez-vous que l'opacité est correcte */
+}
+
+.g-recaptcha {
+  transform:scale(0.77);
+  transform-origin:0 0;
+}
+
