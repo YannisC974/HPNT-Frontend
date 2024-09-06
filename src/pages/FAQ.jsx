@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Heading, Text, Slider, Button, Img } from '../components'
+import axios from "axios";
 
 import {
     AccordionItemPanel,
@@ -10,23 +11,46 @@ import {
     AccordionItem,
 } from "react-accessible-accordion"
 
-const faqData = [
-  {
-      question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
-      answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-  },
-  {
-      question: "Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat?",
-      answer: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-  },
-  {
-      question: "Curabitur pretium tincidunt lacus. Nulla gravida orci a odio?",
-      answer: "Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales hendrerit. Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar."
-  }
-  ];
+
+const useGetFaqData = () => {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get('https://hpn-ticket.happynation.global/data/faq-json/'); 
+        setData(response.data);
+        setIsError(false);
+      } catch (error) {
+        setError(error);
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return { data, error, isLoading, isError };
+};
   
 
 export default function FAQ() {
+    const { data, error, isLoading, isError } = useGetFaqData();
+
+    const faqData = data ? data.map(item => ({
+      question: item.question,
+      answer: item.answer,
+      video_link: item.video_link || null, 
+      thumbnail: item.thumbnail ? item.thumbnail : null, 
+      image: item.image ? item.image : null 
+    })) : [];
+
     return (
       <div className="mt-[8.125vw] flex h-[946px] items-start justify-center self-stretch bg-[url('../public/images/vector3.png')] bg-cover bg-no-repeat sm:px-6 px-14 sm:py-6 py-[132px] lg:h-auto lg:py-8 md:h-auto">
         <div className="mb-[298px] flex w-[82%] flex-col items-center gap-[54px] lg:w-full md:w-full sm:gap-[27px]">
@@ -64,7 +88,28 @@ export default function FAQ() {
                   </AccordionItemButton>
                 </AccordionItemHeading>
                 <AccordionItemPanel>
-                  <div className="ml-[34.7px] sm:ml-[19px]">{item.answer}</div>
+                  {/* <div className="ml-[34.7px] sm:ml-[19px]">{item.answer}</div> */}
+                  <div className="ml-[34.7px] sm:ml-[19px]">
+                  {item.answer}
+                  {item.video_link && (
+                    <div className="mt-4">
+                      <video controls className="w-full">
+                        <source src={item.video_link} />
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
+                  )}
+                  {item.thumbnail && (
+                    <div className="mt-4">
+                      <img src={item.thumbnail} alt="Thumbnail" className="w-full max-w-[400px]"/>
+                    </div>
+                  )}
+                  {item.image && (
+                    <div className="mt-4">
+                      <img src={item.image} alt="Image" className="w-full max-w-[400px]"/>
+                    </div>
+                  )}
+                </div>
                 </AccordionItemPanel>
                 <div className="h-[3px] w-full rotate-[0deg] bg-black-900_14" />
               </AccordionItem>
