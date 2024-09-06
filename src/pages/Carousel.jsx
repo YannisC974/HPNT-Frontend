@@ -3,6 +3,7 @@ import { Slider } from '../components/Slider/Slider';
 import { Heading, TextNoto } from '../components'
 import AliceCarousel from "react-alice-carousel";
 import '../styles/index.css'
+import axios from 'axios';
 import leftArrow from '../assets/left-arrow.png' 
 import rightArrow from '../assets/right-arrow.png'; 
 
@@ -16,7 +17,7 @@ const useGetOnboardingData = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('http://127.0.0.1:8000/data/onboarding-data-json/'); 
+        const response = await axios.get('https://hpn-ticket.happynation.global/data/onboarding-data-json/'); 
         setData(response.data);
         setIsError(false);
       } catch (error) {
@@ -43,7 +44,7 @@ const useGetImageOnboardingData = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('http://127.0.0.1:8000/data/image-onboarding-json/'); 
+        const response = await axios.get('https://hpn-ticket.happynation.global/data/image-onboarding-json/'); 
         setData(response.data);
         setIsError(false);
       } catch (error) {
@@ -66,13 +67,7 @@ const Carousel = () => {
   const { data: dataImg, error: errorImg, isLoading: isLImg, isError: isErrImg } = useGetImageOnboardingData();
   const sliderRef = useRef(null);
 
-  const images = [
-    '../../public/images/image95.png',
-    '../../public/images/image95.png',
-    '../../public/images/image95.png',
-    '../../public/images/image95.png',
-    '../../public/images/image95.png',
-  ];
+  const images = dataImg ? dataImg.map(item => item.image) : [];
 
   const items = images.map((image, index) => (
     <div className="item-wrapper w-full h-full flex items-center justify-center" key={index}>
