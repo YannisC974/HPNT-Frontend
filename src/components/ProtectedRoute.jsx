@@ -14,7 +14,7 @@ function ProtectedRoute({ children }) {
 
     const refreshToken = async () => {
       try {
-        const res = await axios.post("http://127.0.0.1:8000/api/token/refresh/", {}, {
+        const res = await axios.post("https://hpn-ticket.happynation.global/api/token/refresh/", {}, {
           withCredentials: true
         });
         if (res.status === 200) {
@@ -30,7 +30,7 @@ function ProtectedRoute({ children }) {
 
     const auth = async () => {
       try {
-        const res = await axios.get("http://127.0.0.1:8000/api/verify-token/", {
+        const res = await axios.get("https://hpn-ticket.happynation.global/api/verify-token/", {
           withCredentials: true,
         });
         if (res.status === 200) {
