@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Web3 from 'web3';
 import { Heading, Text, Input, Button } from "../components";
 import {SubmitWallet} from "../components/SubmitWallet";
 import ReCAPTCHA from "react-google-recaptcha";
-import { CustomConnectButton } from "../components/ConnectButton";
-import {useAccount, useSignMessage} from 'wagmi'
+import { useWeb3ModalAccount } from '@web3modal/ethers/react';
 
 const useGetLoginData = () => {
   const [data, setData] = useState(null);
@@ -18,7 +16,7 @@ const useGetLoginData = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('http://127.0.0.1:8000/data/home-data-json/'); // Remplacez par votre URL API
+        const response = await axios.get('https://hpn-ticket.happynation.global/data/home-data-json/'); 
         setData(response.data);
         setIsError(false);
       } catch (error) {
@@ -35,10 +33,6 @@ const useGetLoginData = () => {
   return { data, error, isLoading, isError };
 };
 
-
-axios.defaults.withCredentials = true;
-const web3 = new Web3(window.ethereum);
-
 function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
@@ -48,14 +42,17 @@ function Login() {
   const [recaptchaToken, setRecaptchaToken] = useState(null);
   const recaptchaRef = useRef(null);
   const [challenge, setChallenge] = useState('');
-  const { address, isConnected } = useAccount();
-  const { data: signature, error, isError, isLoading, isSuccess, signMessage } = useSignMessage()
+  const { address, chainId, isConnected } = useWeb3ModalAccount();
   const { data, error: errorQuery, isLoading: isLoadingQuery, isError: isErrorQuery } = useGetLoginData();
 
   const onSubmitWithReCAPTCHA = async () => {
     const token = await recaptchaRef.current.executeAsync();
     setRecaptchaToken(token);
   };
+
+  useEffect(() => {
+    localStorage.clear()
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,7 +65,7 @@ function Login() {
 
     setLoading(true);
     try {
-      const res = await axios.post('http://127.0.0.1:8000/api/token/', { username, password }, {withCredentials: true});
+      const res = await axios.post('https://hpn-ticket.happynation.global/api/token/', { username, password }, {withCredentials: true});
       if (res != null) {
         localStorage.setItem('ticketId', username);
         navigate('/my-ticket');
@@ -90,46 +87,45 @@ function Login() {
     }
   };
 
-  const getChallenge = async () => {
-    try {
-      const res = await axios.post('http://127.0.0.1:8000/api/get-challenge/', {address});
-      if (res) {
-        await setChallenge(res.data.challenge); 
-      }
-      return res;
-    } catch (error) {
-      console.error("Get challenge failed", error);
-      throw error; 
-    }
-  }
+  // const getChallenge = async () => {
+  //   try {
+  //     const res = await axios.post('https://hpn-ticket.happynation.global/api/get-challenge/', {address});
+  //     if (res) {
+  //       await setChallenge(res.data.challenge); 
+  //     }
+  //     return res;
+  //   } catch (error) {
+  //     console.error("Get challenge failed", error);
+  //     throw error; 
+  //   }
+  // }
   
-  const getSignature = async (challenge) => {
-    try {
-      const signature = await signMessage({message: challenge});
-      return signature;
-    } catch (error) {
-      console.error("Signing message failed", error);
-      throw error; 
-    }
-  }
+  // const getSignature = async (challenge) => {
+  //   try {
+  //     const signature = await signMessage({message: challenge});
+  //     return signature;
+  //   } catch (error) {
+  //     console.error("Signing message failed", error);
+  //     throw error; 
+  //   }
+  // }
   
-  const handleSubmitWallet = async () => {
-    try {
-      const response = await getChallenge();
-      console.log(response);
-      const challenge = response.data.challenge;
-      const signature = getSignature(challenge);
-    } catch (error) {
-      console.error('Fail', error);
-    }
-  }
+  // const handleSubmitWallet = async () => {
+  //   try {
+  //     const response = await getChallenge();
+  //     console.log(response);
+  //     const challenge = response.data.challenge;
+  //     const signature = getSignature(challenge);
+  //   } catch (error) {
+  //     console.error('Fail', error);
+  //   }
+  // }
 
   useEffect(() => {
     const verifyTokens = async () => {
       try {
-        if (isConnected && address && signature && challenge){
-          console.log("Before the call");
-          const res = await axios.post('http://127.0.0.1:8000/api/verify-and-authenticate-wallet/', {address: address, challenge: challenge, signature: signature});
+        if (isConnected && address){
+          const res = await axios.post('https://hpn-ticket.happynation.global/api/verify-and-authenticate-wallet/', {address: address});
           if (res){
             localStorage.setItem('ticketIds', JSON.stringify(res.data.ticketIds));
             console.log(localStorage);
@@ -145,7 +141,30 @@ function Login() {
     if (isConnected && address){
       verifyTokens();
     }
-  }, [signature])
+  }, [isConnected])
+
+  // useEffect(() => {
+  //   const verifyTokens = async () => {
+  //     try {
+  //       if (isConnected && address && signature && challenge){
+  //         console.log("Before the call");
+  //         const res = await axios.post('https://hpn-ticket.happynation.global/api/verify-and-authenticate-wallet/', {address: address, challenge: challenge, signature: signature});
+  //         if (res){
+  //           localStorage.setItem('ticketIds', JSON.stringify(res.data.ticketIds));
+  //           console.log(localStorage);
+  //           navigate('/my-ticket');
+  //         } else {
+  //           navigate('login');
+  //         }
+  //       }
+  //     } catch(error){
+  //       console.error('Error');
+  //     }
+  //   }
+  //   if (isConnected && address){
+  //     verifyTokens();
+  //   }
+  // }, [signature])
 
   return (
     <div className="flex flex-col-reverse overflow-hidden md:flex-row">
@@ -199,14 +218,6 @@ function Login() {
                 Login
               </Button>
               
-              {/* <div onSubmit={onSubmitWithReCAPTCHA}>
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey="6LfpMBwqAAAAAFhGQ3IIKymGbeYo9J97tOd6shOb"
-                  size="invisible"
-                />
-              </div> */}
-
             </form>
 
             <div className="mt-[1.635vw] md:mt-[16px] mb-[1.635vw] md:mb-[16px] flex md:items-center md:justify-center self-stretch">
@@ -217,15 +228,7 @@ function Login() {
               <div className="mb-[1.635vw] mt-[1.635vw] md:mt-[10px] md:mb-[10px] ml-[1.563vw] md:ml-0 h-px md:w-[138px] w-[12.917vw] bg-deep_orange-a200" />
             </div>
 
-            {/* <Button variant="outline" shape="round" color="yellow_900_red_600" className="border-gradient2 w-[30.312vw] md:w-[324px] md:h-[47px] h-[3.8vw]">
-              
-            </Button> */}
-
-            {/* <button onClick={handleSubmitWallet}>
-                Verify your token
-            </button>
-            <CustomConnectButton /> */}
-            <SubmitWallet login={true} />
+            <w3m-button/>
           </div>
         </div>
       </div>
