@@ -9,7 +9,50 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Login from './pages/Login'
 import NotFound from './pages/NotFound'
 import ProtectedRoute from './components/ProtectedRoute'
-import { WagmiConfig } from "wagmi";
+import { createWeb3Modal, defaultConfig } from '@web3modal/ethers/react'
+
+// 1. Get projectId
+const projectId = '481e0aaf44358fcb63df9a5533bc0737'
+
+// 2. Set chains
+const mainnet = {
+  chainId: 1,
+  name: 'Ethereum',
+  currency: 'ETH',
+  explorerUrl: 'https://etherscan.io',
+  rpcUrl: 'https://cloudflare-eth.com'
+}
+
+// 3. Create a metadata object
+const metadata = {
+  name: 'My Website',
+  description: 'My Website description',
+  url: 'https://mywebsite.com', // origin must match your domain & subdomain
+  icons: ['https://avatars.mywebsite.com/']
+}
+
+// 4. Create Ethers config
+const ethersConfig = defaultConfig({
+  /*Required*/
+  metadata,
+
+  /*Optional*/
+  enableEIP6963: true, // true by default
+  enableInjected: true, // true by default
+  enableCoinbase: true, // true by default
+  rpcUrl: '...', // used for the Coinbase SDK
+  defaultChainId: 1 // used for the Coinbase SDK
+})
+
+// 5. Create a AppKit instance
+createWeb3Modal({
+  ethersConfig,
+  chains: [mainnet],
+  projectId,
+  enableAnalytics: true,
+  themeMode: 'light' // Optional - defaults to your Cloud configuration
+})
+
 
 function Logout() {
   localStorage.clear()
@@ -34,7 +77,7 @@ export default function App() {
                         <div className="flex flex-col items-center">
                           <Hero />
                           <Ticket />
-                          <TicketDetailsSection />
+                          {/* <TicketDetailsSection /> */}
                           <VideoAndDescriptionSection />
                           <Carousel />
                           <FAQ /> 
