@@ -1,0 +1,174 @@
+.ticket-gallery {
+  width: 450px;
+  max-width: 1200px;
+  margin: 8 auto;
+  position: relative;
+}
+
+/* Media Queries pour les petits écrans */
+@media (max-width: 768px) {
+  .ticket-gallery {
+    width: 380px; /* Augmente la largeur pour les petits écrans */
+    /* Ajoutez des ajustements supplémentaires si nécessaire */
+  }
+}
+
+/* Media Queries pour les très petits écrans */
+@media (max-width: 480px) {
+  .ticket-gallery {
+    width: 90%; /* Utilise toute la largeur disponible pour les très petits écrans */
+    padding: 0 10px; /* Ajoute un peu de padding pour éviter que le contenu touche les bords */
+  }
+}
+
+.ticket-item {
+  padding: 10px;
+}
+
+/* Styles pour les flèches du carrousel */
+.slick-prev,
+.slick-next {
+  font-size: 0;
+  line-height: 0;
+  position: absolute;
+  top: 50%;
+  display: block !important;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  transform: translate(0, -50%);
+  cursor: pointer;
+  color: transparent;
+  border: none;
+  outline: none;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  z-index: 1;
+  transition: background 0.3s ease;
+}
+
+.slick-prev:hover,
+.slick-next:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.slick-prev {
+  left: 10px;
+}
+
+.slick-next {
+  right: 10px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  font-family: 'slick';
+  font-size: 30px;
+  line-height: 1;
+  opacity: 1;
+  color: white;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.slick-prev:before {
+  content: '←';
+}
+
+.slick-next:before {
+  content: '→';
+}
+
+/* Suppression des styles pour les points de navigation */
+.slick-dots {
+  display: none;
+}
+
+.single-ticket-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.ticket-gallery .slick-track {
+  display: flex;
+  align-items: center;
+}
+
+.ticket-gallery .slick-slide {
+  height: auto;
+}
+
+/* Ajustements pour mobile */
+@media (max-width: 768px) {
+  .ticket-gallery {
+    padding: 0px;
+  }
+
+  .slick-prev {
+    left: 10px;
+  }
+
+  .slick-next {
+    right: 10px;
+  }
+
+  .single-ticket-container {
+    padding: 10px;
+  }
+}
+
+.ticket-card {
+  perspective: 1000px;
+  width: 196px; 
+  height: 426px; 
+  margin-bottom: 20px;
+}
+
+.ticket-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.ticket-card:hover .ticket-card-inner {
+  transform: rotateY(180deg);
+}
+
+.ticket-card-front,
+.ticket-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.ticket-card-front {
+  background-color: #f1f1f1;
+  color: black;
+}
+
+.ticket-card-back {
+  background-color: #e1e1e1;
+  color: black;
+  transform: rotateY(180deg);
+}
+
+.ticket-card-front img,
+.ticket-card-back img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
