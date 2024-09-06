@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Web3 from 'web3';
 import { Heading, Text, Input, Button } from "../components";
 import {SubmitWallet} from "../components/SubmitWallet";
 import ReCAPTCHA from "react-google-recaptcha";
 import { CustomConnectButton } from "../components/ConnectButton";
-import {useAccount, useSignMessage} from 'wagmi'
 import { useWeb3ModalAccount } from '@web3modal/ethers/react';
 
 const useGetLoginData = () => {
@@ -36,10 +34,6 @@ const useGetLoginData = () => {
   return { data, error, isLoading, isError };
 };
 
-
-axios.defaults.withCredentials = true;
-const web3 = new Web3(window.ethereum);
-
 function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
@@ -50,7 +44,6 @@ function Login() {
   const recaptchaRef = useRef(null);
   const [challenge, setChallenge] = useState('');
   const { address, chainId, isConnected } = useWeb3ModalAccount();
-  const { data: signature, error, isError, isLoading, isSuccess, signMessage } = useSignMessage()
   const { data, error: errorQuery, isLoading: isLoadingQuery, isError: isErrorQuery } = useGetLoginData();
 
   const onSubmitWithReCAPTCHA = async () => {
@@ -222,14 +215,6 @@ function Login() {
                 Login
               </Button>
               
-              {/* <div onSubmit={onSubmitWithReCAPTCHA}>
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey="6LfpMBwqAAAAAFhGQ3IIKymGbeYo9J97tOd6shOb"
-                  size="invisible"
-                />
-              </div> */}
-
             </form>
 
             <div className="mt-[1.635vw] md:mt-[16px] mb-[1.635vw] md:mb-[16px] flex md:items-center md:justify-center self-stretch">
