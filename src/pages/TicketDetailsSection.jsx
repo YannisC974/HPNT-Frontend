@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Heading, TextNoto } from "../components";
+import axios from "axios";
 
 const useGetTicketData = () => {
   const [data, setData] = useState(null);
@@ -11,7 +12,7 @@ const useGetTicketData = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('http://127.0.0.1:8000/data/about-ticket-data-json/'); 
+        const response = await axios.get('https://hpn-ticket.happynation.global/data/about-ticket-data-json/'); 
         setData(response.data);
         setIsError(false);
       } catch (error) {
@@ -30,7 +31,7 @@ const useGetTicketData = () => {
 
 export default function TicketDetailsSection() {
 
-  const { data, error: erroTicket, isLoading, isError } = useGetTicketData();
+  const { data, error: errorTicket, isLoading, isError } = useGetTicketData();
   return (
     <div className="self-stretch ml-[6.667vw] md:ml-0 mt-[3vw]">
       <div className="flex justify-start md:justify-center md:w-full">
@@ -62,7 +63,7 @@ export default function TicketDetailsSection() {
               Artist: Name
             </Heading>
             <TextNoto as="p" className="w-full leading-8">
-              {data?.[0]?.description1}
+              {data?.[0]?.description_1}
             </TextNoto>
           </div>
           <div className="mr-[76px] flex w-[92%] flex-col items-start gap-3 lg:w-full md:mr-0 md:w-full">
@@ -73,7 +74,7 @@ export default function TicketDetailsSection() {
               Artist: Name
             </Heading>
             <TextNoto as="p" className="w-full leading-8">
-               {data?.[0]?.description2}
+               {data?.[0]?.description_2}
             </TextNoto>
           </div>
         </div>
